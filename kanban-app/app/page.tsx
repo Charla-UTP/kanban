@@ -69,13 +69,13 @@ export default function Home() {
           <div className="flex flex-col gap-4 text-base font-medium sm:flex-row mt-8">
             <a
               href="/auth/login"
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-600 text-white px-5 transition-colors hover:bg-blue-700 md:w-[158px]"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-600 text-white px-5 transition-all hover:bg-blue-700 hover:scale-105 md:w-[158px] shadow-md hover:shadow-lg"
             >
               Iniciar Sesión
             </a>
             <a
               href="/auth/register"
-              className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:bg-black/[.04] md:w-[158px]"
+              className="flex h-12 w-full items-center justify-center rounded-full bg-zinc-100 text-zinc-800 px-5 transition-all hover:bg-zinc-200 hover:scale-105 md:w-[158px] border border-zinc-300 hover:border-zinc-400"
             >
               Regístrate
             </a>
