@@ -37,6 +37,12 @@ export default function Home() {
             <div className="text-zinc-600">
               Bienvenido, <span className="font-medium text-black">{user.email}</span>
             </div>
+            <a
+              href="/boards"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-600 text-white px-5 transition-colors hover:bg-blue-700 md:w-[200px]"
+            >
+              Ver Mis Tableros
+            </a>
             <button
               onClick={handleLogout}
               className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-red-600 text-white px-5 transition-colors hover:bg-red-700 md:w-[200px]"
