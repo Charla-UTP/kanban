@@ -37,7 +37,7 @@ export default function LoginPage() {
           </svg>
           Regresar
         </Link>
-        <h1 className="text-2xl font-bold text-center mb-6">Iniciar Sesión</h1>
+        <h1 className="text-2xl font-bold text-center mb-6 text-black">Iniciar Sesión</h1>
         
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm">
