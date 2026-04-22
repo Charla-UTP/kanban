@@ -78,9 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithOAuth = async (provider: 'google' | 'github') => {
     await insforge.auth.signInWithOAuth({
       provider,
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`
-      }
+      redirectTo: `${window.location.origin}/auth/callback`
     })
   }
 
