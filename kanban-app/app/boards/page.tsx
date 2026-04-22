@@ -74,7 +74,7 @@ export default function BoardsPage() {
 
   const handleLogout = async () => {
     await signOut()
-    router.push('/auth/login')
+    router.push('/')
   }
 
   if (authLoading || loading) {
