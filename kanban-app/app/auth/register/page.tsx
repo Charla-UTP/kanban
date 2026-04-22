@@ -63,7 +63,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold text-center mb-6">Crear Cuenta</h1>
+        <h1 className="text-2xl font-bold text-center mb-6 text-black">Crear Cuenta</h1>
         
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm">
