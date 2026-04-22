@@ -43,6 +43,8 @@ export default function BoardPage() {
   const [editTaskDesc, setEditTaskDesc] = useState('')
   const [editTaskTime, setEditTaskTime] = useState('')
   const [editTaskAssignee, setEditTaskAssignee] = useState('')
+  const [draggingTask, setDraggingTask] = useState<string | null>(null)
+  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null)
   const [editingBoard, setEditingBoard] = useState(false)
   const [editBoardName, setEditBoardName] = useState('')
   const [editingColumn, setEditingColumn] = useState<Column | null>(null)
@@ -172,6 +174,38 @@ export default function BoardPage() {
     }
   }
 
+  const handleDragStart = (e: React.DragEvent, taskId: string) => {
+    e.dataTransfer.setData('taskId', taskId)
+    setDraggingTask(taskId)
+  }
+
+  const handleDragOver = (e: React.DragEvent, columnId: string) => {
+    e.preventDefault()
+    setDragOverColumn(columnId)
+  }
+
+  const handleDragLeave = () => {
+    setDragOverColumn(null)
+  }
+
+  const handleDrop = async (e: React.DragEvent, toColumnId: string) => {
+    e.preventDefault()
+    const taskId = e.dataTransfer.getData('taskId')
+    if (taskId) {
+      const task = tasks.find(t => t.id === taskId)
+      if (task && task.column_id !== toColumnId) {
+        await handleMoveTask(taskId, toColumnId)
+      }
+    }
+    setDraggingTask(null)
+    setDragOverColumn(null)
+  }
+
+  const handleDragEnd = () => {
+    setDraggingTask(null)
+    setDragOverColumn(null)
+  }
+
   const handleUpdateBoard = async () => {
     if (!board || !editBoardName.trim()) return
     try {
@@ -280,7 +314,12 @@ export default function BoardPage() {
             {columns.map((column) => (
               <div
                 key={column.id}
-                className="flex-shrink-0 w-72 bg-zinc-100 rounded-lg p-3"
+                onDragOver={(e) => handleDragOver(e, column.id)}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => handleDrop(e, column.id)}
+                className={`flex-shrink-0 w-72 bg-zinc-100 rounded-lg p-3 transition-colors ${
+                  dragOverColumn === column.id ? 'bg-blue-50 border-2 border-dashed border-blue-400' : ''
+                }`}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2 group">
@@ -314,7 +353,9 @@ export default function BoardPage() {
                   {getColumnTasks(column.id).map((task) => (
                     <div
                       key={task.id}
-                      className="bg-white rounded-md p-3 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, task.id)}
+                      onDragEnd={handleDragEnd}
                       onClick={() => {
                         setEditingTask(task.id)
                         setEditTaskTitle(task.title)
@@ -322,39 +363,21 @@ export default function BoardPage() {
                         setEditTaskTime(task.time_estimate || '')
                         setEditTaskAssignee(task.assignee || '')
                       }}
+                      className={`bg-white rounded-md p-3 shadow-sm cursor-pointer hover:shadow-md transition-shadow ${
+                        draggingTask === task.id ? 'opacity-50' : ''
+                      }`}
                     >
                       <div className="flex items-start justify-between">
                         <span className="text-sm text-gray-900">{task.title}</span>
-                        <div className="flex gap-1">
-                          <select
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={(e) => {
-                              if (e.target.value && e.target.value !== column.id) {
-                                handleMoveTask(task.id, e.target.value)
-                              }
-                            }}
-                            className="text-xs text-black bg-zinc-100 border-none rounded px-1 py-0.5 cursor-pointer"
-                            value={column.id}
-                          >
-                            <option value={column.id}>Mover</option>
-                            {columns
-                              .filter((c) => c.id !== column.id)
-                              .map((c) => (
-                                <option key={c.id} value={c.id}>
-                                  → {c.name}
-                                </option>
-                              ))}
-                          </select>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleDeleteTask(task.id)
-                            }}
-                            className="text-xs text-red-600 hover:text-red-700"
-                          >
-                            ×
-                          </button>
-                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDeleteTask(task.id)
+                          }}
+                          className="text-xs text-red-600 hover:text-red-700"
+                        >
+                          ×
+                        </button>
                       </div>
                       {(task.description || task.time_estimate || task.assignee) && (
                         <div className="text-xs text-black mt-1 line-clamp-2">
