@@ -27,13 +27,13 @@ export default function NewBoardPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!name.trim()) return
+    if (!name.trim() || !user) return
 
     setLoading(true)
     setError('')
 
     try {
-      const board = await createBoard(name.trim(), description.trim() || undefined, color)
+      const board = await createBoard(user.id, name.trim(), description.trim() || undefined, color)
       router.push(`/boards/${board.id}`)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error creating board')
@@ -44,7 +44,7 @@ export default function NewBoardPage() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-        <div className="text-zinc-600">Cargando...</div>
+        <div className="text-black600">Cargando...</div>
       </div>
     )
   }
@@ -60,7 +60,7 @@ export default function NewBoardPage() {
         <div className="max-w-6xl mx-auto">
           <a
             href="/boards"
-            className="text-sm text-zinc-600 hover:text-zinc-900"
+            className="text-sm text-black600 hover:text-black900"
           >
             ← Volver a mis tableros
           </a>
@@ -69,7 +69,7 @@ export default function NewBoardPage() {
 
       <main className="max-w-md mx-auto p-6">
         <div className="bg-white rounded-lg border border-zinc-200 p-6">
-          <h1 className="text-xl font-semibold text-zinc-900 mb-6">Crear Nuevo Tablero</h1>
+          <h1 className="text-xl font-semibold text-black900 mb-6">Crear Nuevo Tablero</h1>
           
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm">
@@ -79,7 +79,7 @@ export default function NewBoardPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="name" className="block text-sm font-medium text-black700 mb-1">
                 Nombre del tablero
               </label>
               <input
@@ -94,7 +94,7 @@ export default function NewBoardPage() {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="description" className="block text-sm font-medium text-black700 mb-1">
                 Descripción (opcional)
               </label>
               <textarea
@@ -108,7 +108,7 @@ export default function NewBoardPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-2">
+              <label className="block text-sm font-medium text-black700 mb-2">
                 Color
               </label>
               <div className="flex gap-2">

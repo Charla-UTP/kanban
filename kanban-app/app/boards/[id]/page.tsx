@@ -50,9 +50,10 @@ export default function BoardPage() {
   }, [user, boardId])
 
   const loadBoardData = async () => {
+    if (!user) return
     try {
       setLoading(true)
-      const boards = await getBoards()
+      const boards = await getBoards(user.id)
       const found = boards.find((b) => b.id === boardId)
       if (!found) {
         router.push('/boards')

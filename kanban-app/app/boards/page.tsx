@@ -25,9 +25,10 @@ export default function BoardsPage() {
   }, [user])
 
   const loadBoards = async () => {
+    if (!user) return
     try {
       setLoading(true)
-      const data = await getBoards()
+      const data = await getBoards(user.id)
       setBoards(data)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error loading boards')
@@ -82,7 +83,7 @@ export default function BoardsPage() {
 
         {boards.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-zinc-500 mb-4">No tienes tableros todavía</p>
+            <p className="text-black mb-4">No tienes tableros todavía</p>
             <a
               href="/boards/new"
               className="text-blue-600 hover:underline"
@@ -104,7 +105,7 @@ export default function BoardsPage() {
                 />
                 <h3 className="font-medium text-zinc-900 mb-1">{board.name}</h3>
                 {board.description && (
-                  <p className="text-sm text-zinc-500 line-clamp-2">{board.description}</p>
+                  <p className="text-sm text-black line-clamp-2">{board.description}</p>
                 )}
                 <button
                   onClick={(e) => handleDelete(board.id, e)}
