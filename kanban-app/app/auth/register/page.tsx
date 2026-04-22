@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
@@ -63,6 +64,12 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+        <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Regresar
+        </Link>
         <h1 className="text-2xl font-bold text-center mb-6 text-black">Crear Cuenta</h1>
         
         {error && (
