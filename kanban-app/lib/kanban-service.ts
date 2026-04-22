@@ -25,8 +25,8 @@ export type Task = {
   title: string
   description: string | null
   position: number
-  priority: string
-  due_date: string | null
+  time_estimate: string | null
+  assignee: string | null
   created_at: string
   updated_at: string
 }
@@ -45,6 +45,17 @@ export async function createBoard(userId: string, name: string, description?: st
   const { data, error } = await insforge.database
     .from('boards')
     .insert([{ user_id: userId, name, description: description || null, color: color || '#3b82f6' }])
+    .select()
+    .single()
+  if (error) throw error
+  return data as Board
+}
+
+export async function updateBoard(id: string, updates: Partial<Board>): Promise<Board> {
+  const { data, error } = await insforge.database
+    .from('boards')
+    .update(updates)
+    .eq('id', id)
     .select()
     .single()
   if (error) throw error
@@ -112,10 +123,23 @@ export async function getAllTasks(boardId: string): Promise<Task[]> {
   return (data as Task[]) || []
 }
 
-export async function createTask(columnId: string, title: string, description?: string, priority?: string): Promise<Task> {
+export type TaskInput = {
+  title: string
+  description?: string
+  time_estimate?: string
+  assignee?: string
+}
+
+export async function createTask(columnId: string, input: TaskInput): Promise<Task> {
   const { data, error } = await insforge.database
     .from('tasks')
-    .insert([{ column_id: columnId, title, description: description || null, priority: priority || 'medium' }])
+    .insert([{ 
+      column_id: columnId, 
+      title: input.title, 
+      description: input.description || null,
+      time_estimate: input.time_estimate || null,
+      assignee: input.assignee || null
+    }])
     .select()
     .single()
   if (error) throw error

@@ -24,15 +24,23 @@ export default function Home() {
     <div className="min-h-screen bg-zinc-50 font-sans">
       <header className="bg-white border-b border-zinc-200 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-black">Kanban App</h1>
+          <a href="/" className="flex items-center gap-2 text-xl font-semibold text-black">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Kanban App
+          </a>
           {user && (
             <div className="flex items-center gap-4">
               <span className="text-sm text-black">{user.email}</span>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors"
+                className="p-2 hover:bg-zinc-100 rounded-md transition-colors"
+                title="Cerrar Sesión"
               >
-                Cerrar Sesión
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-zinc-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
               </button>
             </div>
           )}

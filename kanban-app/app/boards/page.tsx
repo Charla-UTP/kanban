@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { getBoards, deleteBoard, Board } from '@/lib/kanban-service'
+import { getBoards, updateBoard, deleteBoard, Board } from '@/lib/kanban-service'
 
 export default function BoardsPage() {
   const { user, loading: authLoading, signOut } = useAuth()
@@ -11,6 +11,9 @@ export default function BoardsPage() {
   const [boards, setBoards] = useState<Board[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [editingBoard, setEditingBoard] = useState<Board | null>(null)
+  const [editName, setEditName] = useState('')
+  const [editDescription, setEditDescription] = useState('')
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -50,6 +53,25 @@ export default function BoardsPage() {
     }
   }
 
+  const handleEditClick = (board: Board, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setEditingBoard(board)
+    setEditName(board.name)
+    setEditDescription(board.description || '')
+  }
+
+  const handleSaveEdit = async () => {
+    if (!editingBoard || !editName.trim()) return
+    try {
+      await updateBoard(editingBoard.id, { name: editName.trim(), description: editDescription.trim() || null })
+      setEditingBoard(null)
+      loadBoards()
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Error updating board')
+    }
+  }
+
   const handleLogout = async () => {
     await signOut()
     router.push('/auth/login')
@@ -69,8 +91,11 @@ export default function BoardsPage() {
     <div className="min-h-screen bg-zinc-50">
       <header className="bg-white border-b border-zinc-200 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="/" className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors">
-            Mis Tableros
+          <a href="/" className="flex items-center gap-2 text-xl font-semibold text-gray-900">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <span>Mis Tableros</span>
           </a>
           <div className="flex items-center gap-4">
             <span className="text-sm text-black">{user.email}</span>
@@ -118,13 +143,21 @@ export default function BoardsPage() {
               <div
                 key={board.id}
                 onClick={() => router.push(`/boards/${board.id}`)}
-                className="bg-white rounded-lg border border-zinc-200 p-4 cursor-pointer hover:shadow-md transition-shadow"
+                className="bg-white rounded-lg border border-zinc-200 p-4 cursor-pointer hover:shadow-md transition-shadow group"
               >
                 <div
                   className="h-2 w-full rounded-full mb-3"
                   style={{ backgroundColor: board.color }}
                 />
-                <h3 className="font-medium text-gray-900 mb-1">{board.name}</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-gray-900 mb-1">{board.name}</h3>
+                  <button
+                    onClick={(e) => handleEditClick(board, e)}
+                    className="text-xs text-gray-500 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    Editar
+                  </button>
+                </div>
                 {board.description && (
                   <p className="text-sm text-black line-clamp-2">{board.description}</p>
                 )}
@@ -139,6 +172,52 @@ export default function BoardsPage() {
           </div>
         )}
       </main>
+
+      {editingBoard && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h2 className="text-lg font-semibold mb-4">Editar Tablero</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-black mb-1">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-black mb-1">
+                  Descripción
+                </label>
+                <textarea
+                  value={editDescription}
+                  onChange={(e) => setEditDescription(e.target.value)}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2 mt-6">
+              <button
+                onClick={handleSaveEdit}
+                className="flex-1 py-2 px-4 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700"
+              >
+                Guardar
+              </button>
+              <button
+                onClick={() => setEditingBoard(null)}
+                className="flex-1 py-2 px-4 border border-zinc-300 text-black rounded-md hover:bg-zinc-50"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

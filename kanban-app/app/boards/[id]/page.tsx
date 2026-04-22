@@ -5,7 +5,9 @@ import { useRouter, useParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import {
   getBoards,
+  updateBoard,
   createColumn,
+  updateColumn,
   deleteColumn,
   getColumns,
   getAllTasks,
@@ -33,9 +35,24 @@ export default function BoardPage() {
   const [addingColumn, setAddingColumn] = useState(false)
   const [newTaskColumn, setNewTaskColumn] = useState<string | null>(null)
   const [newTaskTitle, setNewTaskTitle] = useState('')
+  const [newTaskDesc, setNewTaskDesc] = useState('')
+  const [newTaskTime, setNewTaskTime] = useState('')
+  const [newTaskAssignee, setNewTaskAssignee] = useState('')
   const [editingTask, setEditingTask] = useState<string | null>(null)
   const [editTaskTitle, setEditTaskTitle] = useState('')
   const [editTaskDesc, setEditTaskDesc] = useState('')
+  const [editTaskTime, setEditTaskTime] = useState('')
+  const [editTaskAssignee, setEditTaskAssignee] = useState('')
+  const [editingBoard, setEditingBoard] = useState(false)
+  const [editBoardName, setEditBoardName] = useState('')
+  const [editingColumn, setEditingColumn] = useState<Column | null>(null)
+  const [editColumnName, setEditColumnName] = useState('')
+
+  useEffect(() => {
+    if (board) {
+      setEditBoardName(board.name)
+    }
+  }, [board])
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -98,8 +115,16 @@ export default function BoardPage() {
     e.preventDefault()
     if (!newTaskTitle.trim()) return
     try {
-      await createTask(columnId, newTaskTitle.trim())
+      await createTask(columnId, {
+        title: newTaskTitle.trim(),
+        description: newTaskDesc.trim() || undefined,
+        time_estimate: newTaskTime.trim() || undefined,
+        assignee: newTaskAssignee.trim() || undefined
+      })
       setNewTaskTitle('')
+      setNewTaskDesc('')
+      setNewTaskTime('')
+      setNewTaskAssignee('')
       setNewTaskColumn(null)
       loadBoardData()
     } catch (err: unknown) {
@@ -112,10 +137,14 @@ export default function BoardPage() {
       await updateTask(taskId, {
         title: editTaskTitle,
         description: editTaskDesc || null,
+        time_estimate: editTaskTime || null,
+        assignee: editTaskAssignee || null,
       })
       setEditingTask(null)
       setEditTaskTitle('')
       setEditTaskDesc('')
+      setEditTaskTime('')
+      setEditTaskAssignee('')
       loadBoardData()
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error updating task')
@@ -140,6 +169,29 @@ export default function BoardPage() {
       loadBoardData()
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error moving task')
+    }
+  }
+
+  const handleUpdateBoard = async () => {
+    if (!board || !editBoardName.trim()) return
+    try {
+      await updateBoard(board.id, { name: editBoardName.trim() })
+      setEditingBoard(false)
+      loadBoardData()
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Error updating board')
+    }
+  }
+
+  const handleUpdateColumn = async () => {
+    if (!editingColumn || !editColumnName.trim()) return
+    try {
+      await updateColumn(editingColumn.id, { name: editColumnName.trim() })
+      setEditingColumn(null)
+      setEditColumnName('')
+      loadBoardData()
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Error updating column')
     }
   }
 
@@ -174,7 +226,44 @@ export default function BoardPage() {
               className="w-4 h-4 rounded-full"
               style={{ backgroundColor: board.color }}
             />
-            <h1 className="text-xl font-semibold text-gray-900">{board.name}</h1>
+            {editingBoard ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  handleUpdateBoard()
+                }}
+                className="flex items-center gap-2"
+              >
+                <input
+                  type="text"
+                  value={editBoardName}
+                  onChange={(e) => setEditBoardName(e.target.value)}
+                  className="px-2 py-1 text-xl font-semibold border border-zinc-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
+                  autoFocus
+                />
+                <button type="submit" className="text-sm text-blue-600 hover:text-blue-700">
+                  ✓
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditingBoard(false)}
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
+                  ×
+                </button>
+              </form>
+            ) : (
+              <h1
+                className="text-xl font-semibold text-gray-900 cursor-pointer hover:text-blue-600"
+                onClick={() => {
+                  setEditingBoard(true)
+                  setEditBoardName(board.name)
+                }}
+                title="Click to edit"
+              >
+                {board.name}
+              </h1>
+            )}
           </div>
         </div>
       </header>
@@ -194,7 +283,7 @@ export default function BoardPage() {
                 className="flex-shrink-0 w-72 bg-zinc-100 rounded-lg p-3"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 group">
                     <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: column.color }}
@@ -203,6 +292,15 @@ export default function BoardPage() {
                     <span className="text-xs text-black">
                       ({getColumnTasks(column.id).length})
                     </span>
+                    <button
+                      onClick={() => {
+                        setEditingColumn(column)
+                        setEditColumnName(column.name)
+                      }}
+                      className="text-xs text-gray-500 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      Editar
+                    </button>
                   </div>
                   <button
                     onClick={() => handleDeleteColumn(column.id)}
@@ -221,6 +319,8 @@ export default function BoardPage() {
                         setEditingTask(task.id)
                         setEditTaskTitle(task.title)
                         setEditTaskDesc(task.description || '')
+                        setEditTaskTime(task.time_estimate || '')
+                        setEditTaskAssignee(task.assignee || '')
                       }}
                     >
                       <div className="flex items-start justify-between">
@@ -256,10 +356,12 @@ export default function BoardPage() {
                           </button>
                         </div>
                       </div>
-                      {task.description && (
-                        <p className="text-xs text-black mt-1 line-clamp-2">
-                          {task.description}
-                        </p>
+                      {(task.description || task.time_estimate || task.assignee) && (
+                        <div className="text-xs text-black mt-1 line-clamp-2">
+                          {task.description && <p>{task.description}</p>}
+                          {task.time_estimate && <p className="text-blue-600">⏱ {task.time_estimate}</p>}
+                          {task.assignee && <p className="text-green-600">👤 {task.assignee}</p>}
+                        </div>
                       )}
                     </div>
                   ))}
@@ -274,9 +376,30 @@ export default function BoardPage() {
                       type="text"
                       value={newTaskTitle}
                       onChange={(e) => setNewTaskTitle(e.target.value)}
-                      placeholder="Título de la tarea"
+                      placeholder="Título"
                       className="w-full px-2 py-1 text-sm border border-zinc-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
                       autoFocus
+                    />
+                    <input
+                      type="text"
+                      value={newTaskDesc}
+                      onChange={(e) => setNewTaskDesc(e.target.value)}
+                      placeholder="Descripción"
+                      className="w-full px-2 py-1 text-sm border border-zinc-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
+                    />
+                    <input
+                      type="text"
+                      value={newTaskTime}
+                      onChange={(e) => setNewTaskTime(e.target.value)}
+                      placeholder="Tiempo estimado (ej: 2h)"
+                      className="w-full px-2 py-1 text-sm border border-zinc-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
+                    />
+                    <input
+                      type="text"
+                      value={newTaskAssignee}
+                      onChange={(e) => setNewTaskAssignee(e.target.value)}
+                      placeholder="Responsable"
+                      className="w-full px-2 py-1 text-sm border border-zinc-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
                     />
                     <div className="flex gap-2">
                       <button
@@ -290,6 +413,9 @@ export default function BoardPage() {
                         onClick={() => {
                           setNewTaskColumn(null)
                           setNewTaskTitle('')
+                          setNewTaskDesc('')
+                          setNewTaskTime('')
+                          setNewTaskAssignee('')
                         }}
                         className="px-2 py-1 text-xs text-gray-600 hover:text-gray-900"
                       >
@@ -379,6 +505,30 @@ export default function BoardPage() {
                   className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-black mb-1">
+                  Tiempo estimado
+                </label>
+                <input
+                  type="text"
+                  value={editTaskTime}
+                  onChange={(e) => setEditTaskTime(e.target.value)}
+                  placeholder="ej: 2h"
+                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-black mb-1">
+                  Responsable
+                </label>
+                <input
+                  type="text"
+                  value={editTaskAssignee}
+                  onChange={(e) => setEditTaskAssignee(e.target.value)}
+                  placeholder="Nombre del responsable"
+                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                />
+              </div>
             </div>
             <div className="flex gap-2 mt-6">
               <button
@@ -392,6 +542,46 @@ export default function BoardPage() {
                   setEditingTask(null)
                   setEditTaskTitle('')
                   setEditTaskDesc('')
+                  setEditTaskTime('')
+                  setEditTaskAssignee('')
+                }}
+                className="flex-1 py-2 px-4 border border-zinc-300 text-black rounded-md hover:bg-zinc-50"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editingColumn && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h2 className="text-lg font-semibold mb-4">Editar Columna</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-black mb-1">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  value={editColumnName}
+                  onChange={(e) => setEditColumnName(e.target.value)}
+                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2 mt-6">
+              <button
+                onClick={handleUpdateColumn}
+                className="flex-1 py-2 px-4 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700"
+              >
+                Guardar
+              </button>
+              <button
+                onClick={() => {
+                  setEditingColumn(null)
+                  setEditColumnName('')
                 }}
                 className="flex-1 py-2 px-4 border border-zinc-300 text-black rounded-md hover:bg-zinc-50"
               >
