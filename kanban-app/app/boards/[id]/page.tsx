@@ -21,7 +21,7 @@ import {
 } from '@/lib/kanban-service'
 
 export default function BoardPage() {
-  const { user, loading: authLoading } = useAuth()
+  const { user, loading: authLoading, signOut } = useAuth()
   const router = useRouter()
   const params = useParams()
   const boardId = params.id as string
