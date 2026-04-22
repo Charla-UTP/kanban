@@ -152,7 +152,7 @@ export default function BoardPage() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-        <div className="text-zinc-600">Cargando...</div>
+        <div className="text-gray-600">Cargando...</div>
       </div>
     )
   }
@@ -166,7 +166,7 @@ export default function BoardPage() {
           <div className="flex items-center gap-4">
             <a
               href="/boards"
-              className="text-sm text-zinc-600 hover:text-zinc-900"
+              className="text-sm text-gray-600 hover:text-gray-900"
             >
               ← Mis Tableros
             </a>
@@ -174,7 +174,7 @@ export default function BoardPage() {
               className="w-4 h-4 rounded-full"
               style={{ backgroundColor: board.color }}
             />
-            <h1 className="text-xl font-semibold text-zinc-900">{board.name}</h1>
+            <h1 className="text-xl font-semibold text-gray-900">{board.name}</h1>
           </div>
         </div>
       </header>
@@ -199,8 +199,8 @@ export default function BoardPage() {
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: column.color }}
                     />
-                    <h3 className="font-medium text-zinc-900">{column.name}</h3>
-                    <span className="text-xs text-zinc-500">
+                    <h3 className="font-medium text-gray-900">{column.name}</h3>
+                    <span className="text-xs text-black">
                       ({getColumnTasks(column.id).length})
                     </span>
                   </div>
@@ -224,7 +224,7 @@ export default function BoardPage() {
                       }}
                     >
                       <div className="flex items-start justify-between">
-                        <span className="text-sm text-zinc-900">{task.title}</span>
+                        <span className="text-sm text-gray-900">{task.title}</span>
                         <div className="flex gap-1">
                           <select
                             onClick={(e) => e.stopPropagation()}
@@ -233,7 +233,7 @@ export default function BoardPage() {
                                 handleMoveTask(task.id, e.target.value)
                               }
                             }}
-                            className="text-xs bg-zinc-100 border-none rounded px-1 py-0.5 cursor-pointer"
+                            className="text-xs text-black bg-zinc-100 border-none rounded px-1 py-0.5 cursor-pointer"
                             value={column.id}
                           >
                             <option value={column.id}>Mover</option>
@@ -257,7 +257,7 @@ export default function BoardPage() {
                         </div>
                       </div>
                       {task.description && (
-                        <p className="text-xs text-zinc-500 mt-1 line-clamp-2">
+                        <p className="text-xs text-black mt-1 line-clamp-2">
                           {task.description}
                         </p>
                       )}
@@ -275,7 +275,7 @@ export default function BoardPage() {
                       value={newTaskTitle}
                       onChange={(e) => setNewTaskTitle(e.target.value)}
                       placeholder="Título de la tarea"
-                      className="w-full px-2 py-1 text-sm border border-zinc-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full px-2 py-1 text-sm border border-zinc-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
                       autoFocus
                     />
                     <div className="flex gap-2">
@@ -291,7 +291,7 @@ export default function BoardPage() {
                           setNewTaskColumn(null)
                           setNewTaskTitle('')
                         }}
-                        className="px-2 py-1 text-xs text-zinc-600 hover:text-zinc-900"
+                        className="px-2 py-1 text-xs text-gray-600 hover:text-gray-900"
                       >
                         Cancelar
                       </button>
@@ -300,7 +300,7 @@ export default function BoardPage() {
                 ) : (
                   <button
                     onClick={() => setNewTaskColumn(column.id)}
-                    className="w-full text-left px-2 py-1 text-sm text-zinc-500 hover:text-zinc-700"
+                    className="w-full text-left px-2 py-1 text-sm text-black hover:text-black"
                   >
                     + Agregar tarea
                   </button>
@@ -318,7 +318,7 @@ export default function BoardPage() {
                   value={newColumnName}
                   onChange={(e) => setNewColumnName(e.target.value)}
                   placeholder="Nombre de columna"
-                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   autoFocus
                 />
                 <div className="flex gap-2 mt-2">
@@ -334,7 +334,7 @@ export default function BoardPage() {
                       setAddingColumn(false)
                       setNewColumnName('')
                     }}
-                    className="py-2 px-4 text-sm text-zinc-600 hover:text-zinc-900"
+                    className="py-2 px-4 text-sm text-gray-600 hover:text-gray-900"
                   >
                     Cancelar
                   </button>
@@ -343,7 +343,7 @@ export default function BoardPage() {
             ) : (
               <button
                 onClick={() => setAddingColumn(true)}
-                className="flex-shrink-0 w-72 py-3 text-center text-zinc-500 hover:text-zinc-700 border-2 border-dashed border-zinc-300 rounded-lg"
+                className="flex-shrink-0 w-72 py-3 text-center text-black hover:text-black border-2 border-dashed border-zinc-300 rounded-lg"
               >
                 + Agregar Columna
               </button>
@@ -358,25 +358,25 @@ export default function BoardPage() {
             <h2 className="text-lg font-semibold mb-4">Editar Tarea</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="block text-sm font-medium text-black mb-1">
                   Título
                 </label>
                 <input
                   type="text"
                   value={editTaskTitle}
                   onChange={(e) => setEditTaskTitle(e.target.value)}
-                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="block text-sm font-medium text-black mb-1">
                   Descripción
                 </label>
                 <textarea
                   value={editTaskDesc}
                   onChange={(e) => setEditTaskDesc(e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 />
               </div>
             </div>
@@ -393,7 +393,7 @@ export default function BoardPage() {
                   setEditTaskTitle('')
                   setEditTaskDesc('')
                 }}
-                className="flex-1 py-2 px-4 border border-zinc-300 text-zinc-700 rounded-md hover:bg-zinc-50"
+                className="flex-1 py-2 px-4 border border-zinc-300 text-black rounded-md hover:bg-zinc-50"
               >
                 Cancelar
               </button>

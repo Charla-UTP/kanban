@@ -15,7 +15,7 @@ export default function Home() {
   if (loading) {
     return (
       <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50">
-        <div className="text-zinc-600">Cargando...</div>
+        <div className="text-gray-600">Cargando...</div>
       </div>
     )
   }
@@ -27,14 +27,14 @@ export default function Home() {
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black">
             Kanban App
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600">
+          <p className="max-w-md text-lg leading-8 text-gray-600">
             Aplicación de tableros Kanban para gestionar tus tareas
           </p>
         </div>
 
         {user ? (
           <div className="flex flex-col gap-4 mt-8">
-            <div className="text-zinc-600">
+            <div className="text-gray-600">
               Bienvenido, <span className="font-medium text-black">{user.email}</span>
             </div>
             <a

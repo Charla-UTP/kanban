@@ -44,7 +44,7 @@ export default function NewBoardPage() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-        <div className="text-black600">Cargando...</div>
+        <div className="text-gray-600">Cargando...</div>
       </div>
     )
   }
@@ -60,7 +60,7 @@ export default function NewBoardPage() {
         <div className="max-w-6xl mx-auto">
           <a
             href="/boards"
-            className="text-sm text-black600 hover:text-black900"
+            className="text-sm text-gray-600 hover:text-gray-900"
           >
             ← Volver a mis tableros
           </a>
@@ -69,7 +69,7 @@ export default function NewBoardPage() {
 
       <main className="max-w-md mx-auto p-6">
         <div className="bg-white rounded-lg border border-zinc-200 p-6">
-          <h1 className="text-xl font-semibold text-black900 mb-6">Crear Nuevo Tablero</h1>
+          <h1 className="text-xl font-semibold text-gray-900 mb-6">Crear Nuevo Tablero</h1>
           
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm">
@@ -79,7 +79,7 @@ export default function NewBoardPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-black700 mb-1">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Nombre del tablero
               </label>
               <input
@@ -88,13 +88,13 @@ export default function NewBoardPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 placeholder="Mi tablero Kanban"
               />
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-black700 mb-1">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
                 Descripción (opcional)
               </label>
               <textarea
@@ -102,13 +102,13 @@ export default function NewBoardPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 placeholder="Descripción de tu tablero..."
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Color
               </label>
               <div className="flex gap-2">

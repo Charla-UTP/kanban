@@ -53,7 +53,7 @@ export default function BoardsPage() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-        <div className="text-zinc-600">Cargando...</div>
+        <div className="text-gray-600">Cargando...</div>
       </div>
     )
   }
@@ -64,7 +64,7 @@ export default function BoardsPage() {
     <div className="min-h-screen bg-zinc-50">
       <header className="bg-white border-b border-zinc-200 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-zinc-900">Mis Tableros</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Mis Tableros</h1>
           <a
             href="/boards/new"
             className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
@@ -103,7 +103,7 @@ export default function BoardsPage() {
                   className="h-2 w-full rounded-full mb-3"
                   style={{ backgroundColor: board.color }}
                 />
-                <h3 className="font-medium text-zinc-900 mb-1">{board.name}</h3>
+                <h3 className="font-medium text-gray-900 mb-1">{board.name}</h3>
                 {board.description && (
                   <p className="text-sm text-black line-clamp-2">{board.description}</p>
                 )}

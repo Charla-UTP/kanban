@@ -45,7 +45,7 @@ export default function RegisterPage() {
       <div className="min-h-screen flex items-center justify-center bg-zinc-50">
         <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg text-center">
           <h1 className="text-2xl font-bold text-green-600 mb-4">¡Registro exitoso!</h1>
-          <p className="text-zinc-600 mb-6">
+          <p className="text-gray-600 mb-6">
             Se ha enviado un código de verificación a tu correo electrónico.
             Por favor, verifica tu cuenta antes de iniciar sesión.
           </p>
@@ -73,7 +73,7 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Correo electrónico
             </label>
             <input
@@ -82,13 +82,13 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
               placeholder="tu@email.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-zinc-700">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Contraseña
             </label>
             <input
@@ -98,13 +98,13 @@ export default function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="mt-1 w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
               placeholder="Mínimo 6 caracteres"
             />
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-zinc-700">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
               Confirmar Contraseña
             </label>
             <input
@@ -113,7 +113,7 @@ export default function RegisterPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="mt-1 w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
               placeholder="Repite tu contraseña"
             />
           </div>
@@ -127,7 +127,7 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-zinc-600">
+        <p className="mt-4 text-center text-sm text-gray-600">
           ¿Ya tienes cuenta?{' '}
           <a href="/auth/login" className="text-blue-600 hover:underline">
             Inicia Sesión
