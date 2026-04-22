@@ -21,7 +21,23 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans">
+    <div className="min-h-screen bg-zinc-50 font-sans">
+      <header className="bg-white border-b border-zinc-200 px-6 py-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <h1 className="text-xl font-semibold text-black">Kanban App</h1>
+          {user && (
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-black">{user.email}</span>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors"
+              >
+                Cerrar Sesión
+              </button>
+            </div>
+          )}
+        </div>
+      </header>
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white sm:items-start">
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black">
@@ -34,21 +50,12 @@ export default function Home() {
 
         {user ? (
           <div className="flex flex-col gap-4 mt-8">
-            <div className="text-gray-600">
-              Bienvenido, <span className="font-medium text-black">{user.email}</span>
-            </div>
             <a
               href="/boards"
               className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-600 text-white px-5 transition-colors hover:bg-blue-700 md:w-[200px]"
             >
               Ver Mis Tableros
             </a>
-            <button
-              onClick={handleLogout}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-red-600 text-white px-5 transition-colors hover:bg-red-700 md:w-[200px]"
-            >
-              Cerrar Sesión
-            </button>
           </div>
         ) : (
           <div className="flex flex-col gap-4 text-base font-medium sm:flex-row mt-8">

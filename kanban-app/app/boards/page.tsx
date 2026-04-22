@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth-context'
 import { getBoards, deleteBoard, Board } from '@/lib/kanban-service'
 
 export default function BoardsPage() {
-  const { user, loading: authLoading } = useAuth()
+  const { user, loading: authLoading, signOut } = useAuth()
   const router = useRouter()
   const [boards, setBoards] = useState<Board[]>([])
   const [loading, setLoading] = useState(true)
@@ -50,6 +50,11 @@ export default function BoardsPage() {
     }
   }
 
+  const handleLogout = async () => {
+    await signOut()
+    router.push('/auth/login')
+  }
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50">
@@ -64,17 +69,33 @@ export default function BoardsPage() {
     <div className="min-h-screen bg-zinc-50">
       <header className="bg-white border-b border-zinc-200 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-gray-900">Mis Tableros</h1>
-          <a
-            href="/boards/new"
-            className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Nuevo Tablero
+          <a href="/" className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+            Mis Tableros
           </a>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-black">{user.email}</span>
+            <button
+              onClick={handleLogout}
+              className="p-2 hover:bg-zinc-100 rounded-md transition-colors"
+              title="Cerrar Sesión"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-zinc-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto p-6">
+        <div className="mb-6">
+          <a
+            href="/boards/new"
+            className="inline-block px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Nuevo Tablero
+          </a>
+        </div>
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm">
             {error}
